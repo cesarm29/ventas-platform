@@ -18,8 +18,6 @@ select.input-field {
   background-position: right 0.75rem center;
   background-repeat: no-repeat;
   background-size: 1.25em 1.25em;
-  appearance: none;
-  -webkit-appearance: none;
 }
 .sidebar-link {
   @apply flex items-center gap-3 px-4 py-3 rounded-xl text-dark-300 hover:text-white hover:bg-dark-700/50 transition-all duration-200;
