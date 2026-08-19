@@ -11,5 +11,6 @@ export const AuthActions = createActionGroup({
     'Register Success': props<{ response: AuthResponse }>(),
     'Register Failure': props<{ error: string }>(),
     'Logout': emptyProps(),
+    'Hydrate': props<{ token: string; email: string; fullName: string; role: string }>(),
   }
 });

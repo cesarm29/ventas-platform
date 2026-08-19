@@ -9,6 +9,9 @@ export const initialState: AuthState = {
 
 export const authReducer = createReducer(
   initialState,
+  on(AuthActions.hydrate, (s, { token, email, fullName, role }) => ({
+    ...s, token, email, fullName, role, isAuthenticated: true,
+  })),
   on(AuthActions.login, s => ({ ...s, loading: true, error: null })),
   on(AuthActions.loginSuccess, (s, { response }) => ({
     ...s, token: response.token, email: response.email,
