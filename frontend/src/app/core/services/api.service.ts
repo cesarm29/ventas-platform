@@ -53,4 +53,8 @@ export class ApiService {
   getStats(): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(`${this.base}/products/stats`);
   }
+
+  getOrderStats(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.base}/orders/stats`);
+  }
 }

@@ -24,3 +24,5 @@ logs/
 # Env
 .env
 .env.local
+
+.vercel

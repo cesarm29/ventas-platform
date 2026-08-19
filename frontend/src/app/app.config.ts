@@ -16,6 +16,7 @@ import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { AllCommunityModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AuthService } from './core/services/auth.service';
 import { AuthActions } from './store/auth/auth.actions';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 ModuleRegistry.registerModules([AllCommunityModule, ValidationModule]);
 
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideStore({ auth: authReducer, products: productsReducer, orders: ordersReducer }),
     provideEffects([AuthEffects, ProductsEffects, OrdersEffects]),
     provideStoreDevtools({ maxAge: 25 }),
+    provideCharts(withDefaultRegisterables()),
     {
       provide: APP_INITIALIZER,
       useFactory: (store: Store, auth: AuthService) => () => {
