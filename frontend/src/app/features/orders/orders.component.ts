@@ -23,7 +23,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
     <div class="space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-white">Ventas</h1>
+          <h1 class="text-2xl font-bold text-dark-50">Ventas</h1>
           <p class="text-dark-400 mt-1">Gestion de ordenes de venta</p>
         </div>
       </div>
@@ -38,7 +38,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </select>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        <div [class]="theme.darkMode() ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" style="height: 500px; width: 100%;">
+        <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
           <ag-grid-angular class="w-full h-full"
             [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
             [pagination]="true" [paginationPageSize]="20"

@@ -22,7 +22,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
     <div class="space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-white">Productos</h1>
+          <h1 class="text-2xl font-bold text-dark-50">Productos</h1>
           <p class="text-dark-400 mt-1">Catalogo de productos</p>
         </div>
         <button (click)="showForm.set(true)" class="btn-primary flex items-center gap-2">
@@ -45,7 +45,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </div>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        <div [class]="theme.darkMode() ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" style="height: 500px; width: 100%;">
+        <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
           <ag-grid-angular class="w-full h-full"
             [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
             [pagination]="true" [paginationPageSize]="20" [paginationPageSizeSelector]="[10,20,50]"
@@ -62,7 +62,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
       @if (showForm()) {
         <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" (click)="closeForm()">
           <div class="card w-full max-w-lg" (click)="$event.stopPropagation()">
-            <h2 class="text-xl font-semibold text-white mb-6">Nuevo producto</h2>
+            <h2 class="text-xl font-semibold text-dark-50 mb-6">Nuevo producto</h2>
             <form (ngSubmit)="saveProduct()">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">

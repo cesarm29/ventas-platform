@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { BaseChartDirective } from 'ng2-charts';
@@ -8,6 +8,7 @@ import { OrderActions } from '../../store/orders/orders.actions';
 import { selectAllProducts } from '../../store/products/products.selectors';
 import { selectAllOrders } from '../../store/orders/orders.selectors';
 import { ApiService } from '../../core/services/api.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,7 @@ import { ApiService } from '../../core/services/api.service';
   template: `
     <div class="space-y-6">
       <div>
-        <h1 class="text-2xl font-bold text-white">Dashboard</h1>
+        <h1 class="text-2xl font-bold text-dark-50">Dashboard</h1>
         <p class="text-dark-400 mt-1">Resumen general del sistema</p>
       </div>
 
@@ -27,7 +28,7 @@ import { ApiService } from '../../core/services/api.service';
             <div class="flex items-start justify-between">
               <div>
                 <p class="text-dark-400 text-sm">{{ stat.label }}</p>
-                <p class="text-2xl font-bold text-white mt-1">{{ stat.value }}</p>
+                <p class="text-2xl font-bold text-dark-50 mt-1">{{ stat.value }}</p>
               </div>
               <div [class]="stat.iconBg" class="w-10 h-10 rounded-xl flex items-center justify-center">
                 <svg class="w-5 h-5" [class]="stat.iconColor" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -42,7 +43,7 @@ import { ApiService } from '../../core/services/api.service';
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="card">
-          <h2 class="text-lg font-semibold text-white mb-4">Tendencia de Ventas</h2>
+          <h2 class="text-lg font-semibold text-dark-50 mb-4">Tendencia de Ventas</h2>
           <div style="height: 280px;">
             <canvas baseChart
               [data]="lineChartData"
@@ -52,7 +53,7 @@ import { ApiService } from '../../core/services/api.service';
           </div>
         </div>
         <div class="card">
-          <h2 class="text-lg font-semibold text-white mb-4">Estado de Ordenes</h2>
+          <h2 class="text-lg font-semibold text-dark-50 mb-4">Estado de Ordenes</h2>
           <div style="height: 280px;">
             <canvas baseChart
               [data]="doughnutChartData"
@@ -65,7 +66,7 @@ import { ApiService } from '../../core/services/api.service';
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="card">
-          <h2 class="text-lg font-semibold text-white mb-4">Productos por Categoria</h2>
+          <h2 class="text-lg font-semibold text-dark-50 mb-4">Productos por Categoria</h2>
           <div style="height: 280px;">
             <canvas baseChart
               [data]="barChartData"
@@ -75,7 +76,7 @@ import { ApiService } from '../../core/services/api.service';
           </div>
         </div>
         <div class="card">
-          <h2 class="text-lg font-semibold text-white mb-4">Ventas Recientes</h2>
+          <h2 class="text-lg font-semibold text-dark-50 mb-4">Ventas Recientes</h2>
           <div class="space-y-3 max-h-[280px] overflow-y-auto">
             @for (order of recentOrders; track order.id) {
               <div class="flex items-center gap-4 p-3 rounded-xl bg-dark-700/30">
@@ -104,6 +105,7 @@ export class HomeComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly api = inject(ApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly theme = inject(ThemeService);
 
   readonly orders$ = this.store.select(selectAllOrders);
   recentOrders: any[] = [];
@@ -129,15 +131,8 @@ export class HomeComponent implements OnInit {
     }]
   };
 
-  lineChartOptions: ChartConfiguration<'line'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280' } },
-      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280' } }
-    }
-  };
+  lineChartOptions: ChartConfiguration<'line'>['options'] = this.getLineOptions();
+  doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = this.getDoughnutOptions();
 
   doughnutChartData: ChartData<'doughnut'> = {
     labels: ['Pendiente', 'Confirmado', 'Enviado', 'Entregado', 'Cancelado'],
@@ -146,15 +141,6 @@ export class HomeComponent implements OnInit {
       backgroundColor: ['#facc15', '#3b82f6', '#a855f7', '#22c55e', '#ef4444'],
       borderWidth: 0,
     }]
-  };
-
-  doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'right', labels: { color: '#9ca3af', padding: 12, usePointStyle: true } }
-    },
-    cutout: '65%',
   };
 
   barChartData: ChartData<'bar'> = {
@@ -168,15 +154,7 @@ export class HomeComponent implements OnInit {
     }]
   };
 
-  barChartOptions: ChartConfiguration<'bar'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false }, ticks: { color: '#6b7280' } },
-      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280' } }
-    }
-  };
+  barChartOptions: ChartConfiguration<'bar'>['options'] = this.getBarOptions();
 
   ngOnInit() {
     this.store.dispatch(ProductActions.loadProducts({ page: 0, size: 100 }));
@@ -212,5 +190,38 @@ export class HomeComponent implements OnInit {
       this.stats[0] = { ...this.stats[0], value: products.length.toString() };
       this.cdr.markForCheck();
     });
+  }
+
+  private getGridColor() { return this.theme.darkMode() ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)'; }
+  private getTickColor() { return this.theme.darkMode() ? '#6b7280' : '#475569'; }
+
+  private getLineOptions(): ChartConfiguration<'line'>['options'] {
+    return {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: this.getGridColor() }, ticks: { color: this.getTickColor() } },
+        y: { grid: { color: this.getGridColor() }, ticks: { color: this.getTickColor() } }
+      }
+    };
+  }
+
+  private getDoughnutOptions(): ChartConfiguration<'doughnut'>['options'] {
+    return {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { color: this.getTickColor(), padding: 12, usePointStyle: true } } },
+      cutout: '65%',
+    };
+  }
+
+  private getBarOptions(): ChartConfiguration<'bar'>['options'] {
+    return {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: this.getTickColor() } },
+        y: { grid: { color: this.getGridColor() }, ticks: { color: this.getTickColor() } }
+      }
+    };
   }
 }

@@ -19,11 +19,11 @@ import { selectAuthLoading, selectAuthError } from '../../store/auth/auth.select
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
             </svg>
           </div>
-          <h1 class="text-3xl font-bold text-white tracking-tight">VentasPlatform</h1>
+          <h1 class="text-3xl font-bold text-dark-50 tracking-tight">VentasPlatform</h1>
           <p class="text-dark-400 mt-2">Sistema de gestion de ventas</p>
         </div>
         <div class="card">
-          <h2 class="text-xl font-semibold text-white mb-6">{{ isLogin() ? 'Iniciar sesion' : 'Crear cuenta' }}</h2>
+          <h2 class="text-xl font-semibold text-dark-50 mb-6">{{ isLogin() ? 'Iniciar sesion' : 'Crear cuenta' }}</h2>
           @if (error$ | async; as error) {
             <div class="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{{ error }}</div>
           }
