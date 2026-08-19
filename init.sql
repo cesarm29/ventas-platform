@@ -43,10 +43,8 @@ CREATE TABLE IF NOT EXISTS order_items (
     subtotal DECIMAL(12,2) NOT NULL
 );
 
--- Demo user (password: password123)
-INSERT INTO users (email, password, full_name, role) VALUES
-('admin@ventas.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Administrador', 'ADMIN'),
-('vendedor@ventas.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Vendedor Demo', 'USER');
+-- Demo users are created automatically by DataSeeder on backend startup.
+-- The password hashes below are only used for initial DB setup via Neon SQL Editor.
 
 -- Demo products
 INSERT INTO products (name, description, category, price, stock) VALUES
