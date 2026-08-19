@@ -27,7 +27,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </div>
       </div>
       <div class="card">
-        <select [(ngModel)]="selectedStatus" (ngModelChange)="onStatusChange($event)" class="input-field sm:w-48">
+        <select [(ngModel)]="selectedStatus" (ngModelChange)="onStatusChange($event)" class="input-field w-full sm:w-48">
           <option value="">Todos los estados</option>
           <option value="PENDING">Pendiente</option>
           <option value="CONFIRMED">Confirmado</option>

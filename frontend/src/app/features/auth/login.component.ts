@@ -32,16 +32,16 @@ import { selectAuthLoading, selectAuthError } from '../../store/auth/auth.select
               @if (!isLogin()) {
                 <div>
                   <label class="block text-sm font-medium text-dark-300 mb-1.5">Nombre completo</label>
-                  <input type="text" [(ngModel)]="fullName" name="fullName" class="input-field" placeholder="Tu nombre" required />
+                  <input type="text" [(ngModel)]="fullName" name="fullName" class="input-field w-full" placeholder="Tu nombre" required />
                 </div>
               }
               <div>
                 <label class="block text-sm font-medium text-dark-300 mb-1.5">Email</label>
-                <input type="email" [(ngModel)]="email" name="email" class="input-field" placeholder="admin&#64;ventas.com" required />
+                <input type="email" [(ngModel)]="email" name="email" class="input-field w-full" placeholder="admin&#64;ventas.com" required />
               </div>
               <div>
                 <label class="block text-sm font-medium text-dark-300 mb-1.5">Contrasena</label>
-                <input type="password" [(ngModel)]="password" name="password" class="input-field" placeholder="Minimo 6 caracteres" required />
+                <input type="password" [(ngModel)]="password" name="password" class="input-field w-full" placeholder="Minimo 6 caracteres" required />
               </div>
               <button type="submit" class="btn-primary w-full" [disabled]="loading$ | async">
                 @if (loading$ | async) {

@@ -31,12 +31,12 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
       </div>
       <div class="card !p-4 sm:!p-6">
         <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div class="relative w-full sm:flex-1 sm:min-w-0">
+          <div class="relative flex-1 min-w-0 order-2 sm:order-1">
             <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" class="input-field !pl-11" placeholder="Buscar producto..." />
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" class="input-field w-full !pl-11" placeholder="Buscar producto..." />
           </div>
-          <select [(ngModel)]="selectedCategory" (ngModelChange)="onCategory($event)" class="input-field w-full sm:w-52">
-            <option value="">Todas las categorias</option>
+          <select [(ngModel)]="selectedCategory" (ngModelChange)="onCategory($event)" class="input-field shrink-0 order-1 sm:order-2 w-full sm:w-48">
+            <option value="">Categoria</option>
             <option value="Electronica">Electronica</option>
             <option value="Accesorios">Accesorios</option>
             <option value="Muebles">Muebles</option>
@@ -66,23 +66,23 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
                   <label class="block text-sm text-dark-300 mb-1">Nombre</label>
-                  <input [(ngModel)]="formData.name" name="name" class="input-field" required />
+                  <input [(ngModel)]="formData.name" name="name" class="input-field w-full" required />
                 </div>
                 <div>
                   <label class="block text-sm text-dark-300 mb-1">Categoria</label>
-                  <input [(ngModel)]="formData.category" name="category" class="input-field" required />
+                  <input [(ngModel)]="formData.category" name="category" class="input-field w-full" required />
                 </div>
                 <div>
                   <label class="block text-sm text-dark-300 mb-1">Precio</label>
-                  <input type="number" [(ngModel)]="formData.price" name="price" class="input-field" required />
+                  <input type="number" [(ngModel)]="formData.price" name="price" class="input-field w-full" required />
                 </div>
                 <div>
                   <label class="block text-sm text-dark-300 mb-1">Stock</label>
-                  <input type="number" [(ngModel)]="formData.stock" name="stock" class="input-field" required />
+                  <input type="number" [(ngModel)]="formData.stock" name="stock" class="input-field w-full" required />
                 </div>
                 <div class="sm:col-span-2">
                   <label class="block text-sm text-dark-300 mb-1">Descripcion</label>
-                  <textarea [(ngModel)]="formData.description" name="description" class="input-field" rows="2"></textarea>
+                  <textarea [(ngModel)]="formData.description" name="description" class="input-field w-full" rows="2"></textarea>
                 </div>
               </div>
               <div class="flex justify-end gap-3 mt-6">
