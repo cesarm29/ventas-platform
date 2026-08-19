@@ -29,13 +29,13 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
           Nuevo producto
         </button>
       </div>
-      <div class="card">
+      <div class="card !p-4 sm:!p-6">
         <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div class="relative flex-1">
+          <div class="relative w-full sm:flex-1 sm:min-w-0">
             <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" class="input-field !pl-11 text-base" placeholder="Buscar producto..." />
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" class="input-field !pl-11" placeholder="Buscar producto..." />
           </div>
-          <select [(ngModel)]="selectedCategory" (ngModelChange)="onCategory($event)" class="input-field sm:w-52 text-base">
+          <select [(ngModel)]="selectedCategory" (ngModelChange)="onCategory($event)" class="input-field w-full sm:w-52">
             <option value="">Todas las categorias</option>
             <option value="Electronica">Electronica</option>
             <option value="Accesorios">Accesorios</option>

@@ -72,7 +72,7 @@ import { AuthService } from '../../core/services/auth.service';
             <span class="text-xs text-dark-400">En linea</span>
           </div>
         </header>
-        <main class="flex-1 p-4 lg:p-6"><router-outlet /></main>
+        <main class="flex-1 p-4 lg:p-6 overflow-x-hidden"><router-outlet /></main>
       </div>
     </div>
   `
