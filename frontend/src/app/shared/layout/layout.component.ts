@@ -6,6 +6,7 @@ import { AuthActions } from '../../store/auth/auth.actions';
 import { selectAuthEmail, selectAuthRole, selectAuthName } from '../../store/auth/auth.selectors';
 import { WebSocketService } from '../../core/services/websocket.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-layout',
@@ -46,7 +47,16 @@ import { AuthService } from '../../core/services/auth.service';
             <span>Ventas</span>
           </a>
         </nav>
-        <div class="p-4 border-t border-dark-700/50">
+        <div class="p-4 border-t border-dark-700/50 space-y-3">
+          <button (click)="theme.toggle()" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-dark-300 hover:text-white hover:bg-dark-700/50 transition-colors text-sm">
+            @if (theme.darkMode()) {
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              <span>Light Mode</span>
+            } @else {
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+              <span>Dark Mode</span>
+            }
+          </button>
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-primary-600/10 flex items-center justify-center">
               <span class="text-primary-400 text-sm font-semibold">{{ (name$ | async)?.charAt(0)?.toUpperCase() }}</span>
@@ -81,6 +91,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   private readonly store = inject(Store);
   private readonly auth = inject(AuthService);
   private readonly ws = inject(WebSocketService);
+  readonly theme = inject(ThemeService);
   sidebarOpen = signal(false);
   readonly email$ = this.store.select(selectAuthEmail);
   readonly role$ = this.store.select(selectAuthRole);

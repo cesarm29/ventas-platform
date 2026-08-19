@@ -10,6 +10,7 @@ import { OrderActions } from '../../store/orders/orders.actions';
 import { selectAllOrders, selectOrderLoading, selectOrderPageInfo } from '../../store/orders/orders.selectors';
 import { WebSocketService } from '../../core/services/websocket.service';
 import { ApiService } from '../../core/services/api.service';
+import { ThemeService } from '../../core/services/theme.service';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
@@ -26,7 +27,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
           <p class="text-dark-400 mt-1">Gestion de ordenes de venta</p>
         </div>
       </div>
-      <div class="card">
+      <div class="card overflow-hidden">
         <select [(ngModel)]="selectedStatus" (ngModelChange)="onStatusChange($event)" class="input-field w-full sm:w-48">
           <option value="">Todos los estados</option>
           <option value="PENDING">Pendiente</option>
@@ -37,7 +38,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </select>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
+        <div [class]="theme.darkMode() ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" style="height: 500px; width: 100%;">
           <ag-grid-angular class="w-full h-full"
             [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
             [pagination]="true" [paginationPageSize]="20"
@@ -53,6 +54,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly ws = inject(WebSocketService);
   private readonly api = inject(ApiService);
+  readonly theme = inject(ThemeService);
   private readonly destroy$ = new Subject<void>();
   private gridApi!: GridApi;
 

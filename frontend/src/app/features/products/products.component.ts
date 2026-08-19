@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -9,6 +9,7 @@ import { Product } from '../../core/models/api.models';
 import { ProductActions } from '../../store/products/products.actions';
 import { selectAllProducts, selectProductLoading, selectProductPageInfo } from '../../store/products/products.selectors';
 import { WebSocketService } from '../../core/services/websocket.service';
+import { ThemeService } from '../../core/services/theme.service';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
@@ -29,7 +30,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
           Nuevo producto
         </button>
       </div>
-      <div class="card !p-4 sm:!p-6">
+      <div class="card !p-4 sm:!p-6 overflow-hidden">
         <div class="flex flex-col sm:flex-row sm:items-center gap-3">
           <div class="relative flex-1 min-w-0 order-2 sm:order-1">
             <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -44,7 +45,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </div>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
+        <div [class]="theme.darkMode() ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'" style="height: 500px; width: 100%;">
           <ag-grid-angular class="w-full h-full"
             [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
             [pagination]="true" [paginationPageSize]="20" [paginationPageSizeSelector]="[10,20,50]"
@@ -100,6 +101,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private readonly store = inject(Store);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly ws = inject(WebSocketService);
+  readonly theme = inject(ThemeService);
   private readonly destroy$ = new Subject<void>();
   private readonly search$ = new Subject<string>();
   private gridApi!: GridApi;

@@ -14,7 +14,9 @@
   min-height: 48px;
 }
 select.input-field {
-  @apply pr-3;
+  padding-right: 2.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .sidebar-link {
   @apply flex items-center gap-3 px-4 py-3 rounded-xl text-dark-300 hover:text-white hover:bg-dark-700/50 transition-all duration-200;
