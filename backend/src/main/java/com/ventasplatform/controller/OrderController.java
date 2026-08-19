@@ -17,7 +17,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<OrderDTO>> getOrders(
+    public ResponseEntity<ApiResponse<java.util.List<OrderDTO>>> getOrders(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String status) {
@@ -44,7 +44,7 @@ public class OrderController {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<ApiResponse<Object>> stats() {
+    public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> stats() {
         return ResponseEntity.ok(orderService.getStats());
     }
 }

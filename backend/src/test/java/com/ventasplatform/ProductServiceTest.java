@@ -1,11 +1,9 @@
-package com.ventasplatform.service;
+package com.ventasplatform;
 
 import com.ventasplatform.dto.*;
 import com.ventasplatform.entity.Product;
-import com.ventasplatform.entity.User;
 import com.ventasplatform.repository.ProductRepository;
-import com.ventasplatform.repository.UserRepository;
-import com.ventasplatform.security.JwtTokenProvider;
+import com.ventasplatform.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,13 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -44,14 +41,14 @@ class ProductServiceTest {
     @Test
     @DisplayName("Crear producto exitosamente")
     void createProduct() {
-        given(productRepository.save(any(Product.class))).thenReturn(testProduct);
+        given(productRepository.save(any(Product.class))).willReturn(testProduct);
         ProductDTO dto = new ProductDTO(null, "Laptop HP", "Laptop 16GB", "Electronica", BigDecimal.valueOf(899.99), 25, true);
 
         ProductDTO result = productService.createProduct(dto);
 
         assertThat(result).isNotNull();
         assertThat(result.name()).isEqualTo("Laptop HP");
-        verify(messagingTemplate).convertAndSend(eq("/topic/products"), any());
+        verify(messagingTemplate).convertAndSend(eq("/topic/products"), any(java.util.Map.class));
     }
 
     @Test

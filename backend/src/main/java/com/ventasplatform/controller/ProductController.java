@@ -16,7 +16,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<ProductDTO>> getProducts(
+    public ResponseEntity<ApiResponse<java.util.List<ProductDTO>>> getProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String search,
@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<ApiResponse<Object>> stats() {
+    public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> stats() {
         return ResponseEntity.ok(productService.getStats());
     }
 }

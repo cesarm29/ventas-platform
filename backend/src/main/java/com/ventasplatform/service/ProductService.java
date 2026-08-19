@@ -27,7 +27,7 @@ public class ProductService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Cacheable(value = "products", key = "#page + '-' + #size + '-' + #search + '-' + #category")
-    public ApiResponse<ProductDTO> getProducts(int page, int size, String search, String category) {
+    public ApiResponse<java.util.List<ProductDTO>> getProducts(int page, int size, String search, String category) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage;
 

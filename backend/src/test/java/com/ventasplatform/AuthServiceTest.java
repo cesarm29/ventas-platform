@@ -1,9 +1,10 @@
-package com.ventasplatform.service;
+package com.ventasplatform;
 
 import com.ventasplatform.dto.*;
 import com.ventasplatform.entity.User;
 import com.ventasplatform.repository.UserRepository;
 import com.ventasplatform.security.JwtTokenProvider;
+import com.ventasplatform.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

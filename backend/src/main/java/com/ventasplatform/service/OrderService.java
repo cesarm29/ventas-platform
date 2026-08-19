@@ -32,7 +32,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public ApiResponse<OrderDTO> getOrders(int page, int size, String status) {
+    public ApiResponse<java.util.List<OrderDTO>> getOrders(int page, int size, String status) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Order> orderPage;
 
