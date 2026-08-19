@@ -12,6 +12,9 @@ import { AuthEffects } from './store/auth/auth.effects';
 import { ProductsEffects } from './store/products/products.effects';
 import { OrdersEffects } from './store/orders/orders.effects';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 export const appConfig: ApplicationConfig = {
   providers: [
