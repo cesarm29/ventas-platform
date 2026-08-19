@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "buildCommand": "npx ng build --configuration=production",
+  "outputDirectory": "dist/frontend/browser",
+  "installCommand": "npm install --legacy-peer-deps",
+  "framework": "angular",
+  "rewrites": [
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+  ]
+}
