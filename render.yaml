@@ -3,13 +3,11 @@ services:
     name: ventas-platform-api
     runtime: docker
     dockerfilePath: ./Dockerfile
-    envVars:
-      - key: DATABASE_URL
-        sync: false
-      - key: JWT_SECRET
-        generateValue: true
-      - key: JAVA_VERSION
-        value: "20"
     plan: free
     healthCheckPath: /actuator/health
     autoDeploy: true
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
