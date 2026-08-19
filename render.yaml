@@ -1,13 +1,72 @@
 services:
   - type: web
-    name: ventas-platform-api
+    name: ventas-api-gateway
     runtime: docker
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: ./microservices/api-gateway/Dockerfile
+    rootDir: .
+    plan: free
+    healthCheckPath: /actuator/health
+    autoDeploy: true
+    envVars:
+      - key: AUTH_SERVICE_URL
+        value: https://ventas-auth-service.onrender.com
+      - key: PRODUCT_SERVICE_URL
+        value: https://ventas-product-service.onrender.com
+      - key: ORDER_SERVICE_URL
+        value: https://ventas-order-service.onrender.com
+
+  - type: web
+    name: ventas-auth-service
+    runtime: docker
+    dockerfilePath: ./microservices/auth-service/Dockerfile
+    rootDir: .
     plan: free
     healthCheckPath: /actuator/health
     autoDeploy: true
     envVars:
       - key: SPRING_DATASOURCE_URL
-        sync: false
+        value: jdbc:postgresql://ep-fragrant-wildflower-avy022de-pooler.c-11.us-east-1.aws.neon.tech/ventas_auth?sslmode=require
+      - key: SPRING_DATASOURCE_USERNAME
+        value: neondb_owner
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: npg_ndbiWmqBL14a
       - key: JWT_SECRET
-        generateValue: true
+        value: ventasPlatformSecretKeyThatIsLongEnoughForHMACSHA256Algorithm2024
+
+  - type: web
+    name: ventas-product-service
+    runtime: docker
+    dockerfilePath: ./microservices/product-service/Dockerfile
+    rootDir: .
+    plan: free
+    healthCheckPath: /actuator/health
+    autoDeploy: true
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:postgresql://ep-fragrant-wildflower-avy022de-pooler.c-11.us-east-1.aws.neon.tech/ventas_products?sslmode=require
+      - key: SPRING_DATASOURCE_USERNAME
+        value: neondb_owner
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: npg_ndbiWmqBL14a
+      - key: KAFKA_ENABLED
+        value: "false"
+
+  - type: web
+    name: ventas-order-service
+    runtime: docker
+    dockerfilePath: ./microservices/order-service/Dockerfile
+    rootDir: .
+    plan: free
+    healthCheckPath: /actuator/health
+    autoDeploy: true
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:postgresql://ep-fragrant-wildflower-avy022de-pooler.c-11.us-east-1.aws.neon.tech/ventas_orders?sslmode=require
+      - key: SPRING_DATASOURCE_USERNAME
+        value: neondb_owner
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: npg_ndbiWmqBL14a
+      - key: PRODUCT_SERVICE_URL
+        value: https://ventas-product-service.onrender.com
+      - key: KAFKA_ENABLED
+        value: "false"
