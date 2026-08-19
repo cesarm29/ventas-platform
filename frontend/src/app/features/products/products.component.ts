@@ -45,13 +45,23 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </div>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
-          <ag-grid-angular class="w-full h-full"
-            [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-            [pagination]="true" [paginationPageSize]="20" [paginationPageSizeSelector]="[10,20,50]"
-            [animateRows]="true" [loading]="loading()"
-            (gridReady)="onGridReady($event)" />
-        </div>
+        @if (theme.darkMode()) {
+          <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
+            <ag-grid-angular class="w-full h-full"
+              [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+              [pagination]="true" [paginationPageSize]="20" [paginationPageSizeSelector]="[10,20,50]"
+              [animateRows]="true" [loading]="loading()"
+              (gridReady)="onGridReady($event)" />
+          </div>
+        } @else {
+          <div class="ag-theme-alpine" style="height: 500px; width: 100%;">
+            <ag-grid-angular class="w-full h-full"
+              [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+              [pagination]="true" [paginationPageSize]="20" [paginationPageSizeSelector]="[10,20,50]"
+              [animateRows]="true" [loading]="loading()"
+              (gridReady)="onGridReady($event)" />
+          </div>
+        }
       </div>
       @if (pageInfo(); as pi) {
         <div class="flex items-center justify-between text-sm text-dark-400">

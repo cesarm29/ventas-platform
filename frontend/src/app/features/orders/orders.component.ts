@@ -38,13 +38,23 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </select>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
-          <ag-grid-angular class="w-full h-full"
-            [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-            [pagination]="true" [paginationPageSize]="20"
-            [animateRows]="true" [loading]="loading()"
-            (gridReady)="onGridReady($event)" />
-        </div>
+        @if (theme.darkMode()) {
+          <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
+            <ag-grid-angular class="w-full h-full"
+              [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+              [pagination]="true" [paginationPageSize]="20"
+              [animateRows]="true" [loading]="loading()"
+              (gridReady)="onGridReady($event)" />
+          </div>
+        } @else {
+          <div class="ag-theme-alpine" style="height: 500px; width: 100%;">
+            <ag-grid-angular class="w-full h-full"
+              [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+              [pagination]="true" [paginationPageSize]="20"
+              [animateRows]="true" [loading]="loading()"
+              (gridReady)="onGridReady($event)" />
+          </div>
+        }
       </div>
     </div>
   `
