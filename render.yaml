@@ -3,7 +3,7 @@ services:
     name: ventas-api-gateway
     runtime: docker
     rootDir: ./microservices/api-gateway
-    dockerfilePath: ./microservices/api-gateway/Dockerfile
+    dockerfilePath: ./Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     autoDeploy: true
@@ -19,7 +19,7 @@ services:
     name: ventas-auth-service
     runtime: docker
     rootDir: ./microservices/auth-service
-    dockerfilePath: ./microservices/auth-service/Dockerfile
+    dockerfilePath: ./Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     autoDeploy: true
@@ -37,7 +37,7 @@ services:
     name: ventas-product-service
     runtime: docker
     rootDir: ./microservices/product-service
-    dockerfilePath: ./microservices/product-service/Dockerfile
+    dockerfilePath: ./Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     autoDeploy: true
@@ -55,7 +55,7 @@ services:
     name: ventas-order-service
     runtime: docker
     rootDir: ./microservices/order-service
-    dockerfilePath: ./microservices/order-service/Dockerfile
+    dockerfilePath: ./Dockerfile
     plan: free
     healthCheckPath: /actuator/health
     autoDeploy: true
