@@ -30,6 +30,7 @@
               }
             ],
             "styles": [
+              "src/tailwind.css",
               "src/styles.scss"
             ],
             "allowedCommonJsDependencies": ["@stomp/stompjs", "sockjs-client"]
@@ -89,6 +90,7 @@
               }
             ],
             "styles": [
+              "src/tailwind.css",
               "src/styles.scss"
             ]
           }

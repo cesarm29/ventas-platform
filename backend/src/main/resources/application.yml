@@ -1,20 +1,9 @@
 server:
-  port: ${PORT:8080}
+  port: ${PORT:10000}
 
 spring:
   application:
     name: ventas-platform-api
-  datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ventas_db}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
-      connection-timeout: 30000
-      ssl-mode: require
-      ssl: true
   jpa:
     hibernate:
       ddl-auto: update
