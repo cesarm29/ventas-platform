@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { AuthActions } from '../../store/auth/auth.actions';
 import { selectAuthEmail, selectAuthRole, selectAuthName } from '../../store/auth/auth.selectors';
 import { WebSocketService } from '../../core/services/websocket.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -78,13 +79,29 @@ import { WebSocketService } from '../../core/services/websocket.service';
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   private readonly store = inject(Store);
+  private readonly auth = inject(AuthService);
   private readonly ws = inject(WebSocketService);
   sidebarOpen = signal(false);
   readonly email$ = this.store.select(selectAuthEmail);
   readonly role$ = this.store.select(selectAuthRole);
   readonly name$ = this.store.select(selectAuthName);
+  private hydrated = false;
 
-  ngOnInit() { this.ws.connect(); }
+  ngOnInit() {
+    if (!this.hydrated) {
+      this.hydrated = true;
+      const token = this.auth.getToken();
+      if (token) {
+        this.store.dispatch(AuthActions.hydrate({
+          token,
+          email: this.auth.getEmail() || '',
+          fullName: this.auth.getFullName() || '',
+          role: this.auth.getRole() || '',
+        }));
+      }
+    }
+    this.ws.connect();
+  }
   ngOnDestroy() { this.ws.disconnect(); }
   logout() { this.store.dispatch(AuthActions.logout()); }
 }

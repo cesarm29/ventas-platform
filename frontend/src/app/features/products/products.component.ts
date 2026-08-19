@@ -113,7 +113,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   columnDefs: ColDef[] = [
     { field: 'name', headerName: 'Producto', flex: 1, minWidth: 200, filter: 'agTextColumnFilter' },
-    { field: 'category', headerName: 'Categoria', width: 140, filter: 'agSetColumnFilter' },
+    { field: 'category', headerName: 'Categoria', width: 140, filter: 'agTextColumnFilter' },
     { field: 'price', headerName: 'Precio', width: 130, filter: 'agNumberColumnFilter', cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
     { field: 'stock', headerName: 'Stock', width: 100, filter: 'agNumberColumnFilter', cellStyle: (p: any) => ({ color: p.value < 20 ? '#f87171' : '#4ade80' }) },
     { field: 'active', headerName: 'Estado', width: 100, cellRenderer: (p: any) => p.value ? '<span class="text-green-400">Activo</span>' : '<span class="text-red-400">Inactivo</span>' },

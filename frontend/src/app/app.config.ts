@@ -13,11 +13,11 @@ import { AuthEffects } from './store/auth/auth.effects';
 import { ProductsEffects } from './store/products/products.effects';
 import { OrdersEffects } from './store/orders/orders.effects';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AuthService } from './core/services/auth.service';
 import { AuthActions } from './store/auth/auth.actions';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ValidationModule]);
 
 export const appConfig: ApplicationConfig = {
   providers: [
