@@ -18,7 +18,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
   selector: 'app-orders',
   standalone: true,
   imports: [CommonModule, FormsModule, AgGridAngular],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   template: `
     <div class="space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
