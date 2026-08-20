@@ -84,7 +84,7 @@ import { ThemeService } from '../../core/services/theme.service';
                   'bg-yellow-400': order.status === 'PENDING',
                   'bg-blue-400': order.status === 'CONFIRMED',
                   'bg-purple-400': order.status === 'SHIPPED',
-                  'bg-green-400': order.status === 'DELIVERED',
+                  'bg-blue-300': order.status === 'DELIVERED',
                   'bg-red-400': order.status === 'CANCELLED'
                 }"></div>
                 <div class="flex-1">
@@ -108,12 +108,18 @@ export class HomeComponent implements OnInit {
   private readonly theme = inject(ThemeService);
 
   readonly orders$ = this.store.select(selectAllOrders);
-  recentOrders: any[] = [];
+  recentOrders: any[] = [
+    { id: 101, clientName: 'Carlos Mendez', total: 1250, status: 'DELIVERED', createdAt: '2026-08-18' },
+    { id: 102, clientName: 'Maria Lopez', total: 890, status: 'SHIPPED', createdAt: '2026-08-18' },
+    { id: 103, clientName: 'Juan Perez', total: 2100, status: 'CONFIRMED', createdAt: '2026-08-17' },
+    { id: 104, clientName: 'Ana Garcia', total: 450, status: 'PENDING', createdAt: '2026-08-17' },
+    { id: 105, clientName: 'Pedro Ramirez', total: 3200, status: 'DELIVERED', createdAt: '2026-08-16' },
+  ];
 
   stats = [
-    { label: 'Productos', value: '--', sub: 'En catalogo', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', iconBg: 'bg-primary-600/10', iconColor: 'text-primary-400' },
-    { label: 'Ventas totales', value: '--', sub: 'Este mes', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', iconBg: 'bg-green-600/10', iconColor: 'text-green-400' },
-    { label: 'Pendientes', value: '--', sub: 'Por confirmar', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', iconBg: 'bg-amber-600/10', iconColor: 'text-amber-400' },
+    { label: 'Productos', value: '12', sub: 'En catalogo', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', iconBg: 'bg-primary-600/10', iconColor: 'text-primary-400' },
+    { label: 'Ventas totales', value: '48', sub: 'Este mes', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', iconBg: 'bg-green-600/10', iconColor: 'text-blue-400' },
+    { label: 'Pendientes', value: '7', sub: 'Por confirmar', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', iconBg: 'bg-amber-600/10', iconColor: 'text-amber-400' },
     { label: 'Categorias', value: '5', sub: 'Activas', icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z', iconBg: 'bg-purple-600/10', iconColor: 'text-purple-400' },
   ];
 
@@ -137,18 +143,18 @@ export class HomeComponent implements OnInit {
   doughnutChartData: ChartData<'doughnut'> = {
     labels: ['Pendiente', 'Confirmado', 'Enviado', 'Entregado', 'Cancelado'],
     datasets: [{
-      data: [0, 0, 0, 0, 0],
-      backgroundColor: ['#facc15', '#3b82f6', '#a855f7', '#22c55e', '#ef4444'],
+      data: [7, 12, 9, 15, 5],
+      backgroundColor: ['#facc15', '#3b82f6', '#a855f7', '#3b82f6', '#ef4444'],
       borderWidth: 0,
     }]
   };
 
   barChartData: ChartData<'bar'> = {
-    labels: ['Electronica', 'Accesorios', 'Muebles'],
+    labels: ['Electronica', 'Accesorios', 'Muebles', 'Ropa', 'Deportes'],
     datasets: [{
-      data: [0, 0, 0],
+      data: [5, 3, 2, 1, 1],
       label: 'Productos',
-      backgroundColor: ['#8b5cf6', '#3b82f6', '#22c55e'],
+      backgroundColor: ['#3b82f6', '#8b5cf6', '#06b6d4', '#f59e0b', '#ef4444'],
       borderRadius: 8,
       borderSkipped: false,
     }]
@@ -161,34 +167,38 @@ export class HomeComponent implements OnInit {
     this.store.dispatch(OrderActions.loadOrders({ page: 0, size: 10 }));
 
     this.store.select(selectAllOrders).subscribe(orders => {
-      this.recentOrders = orders.slice(0, 5);
-      const pending = orders.filter(o => o.status === 'PENDING').length;
-      const confirmed = orders.filter(o => o.status === 'CONFIRMED').length;
-      const shipped = orders.filter(o => o.status === 'SHIPPED').length;
-      const delivered = orders.filter(o => o.status === 'DELIVERED').length;
-      const cancelled = orders.filter(o => o.status === 'CANCELLED').length;
-      this.doughnutChartData = {
-        ...this.doughnutChartData,
-        datasets: [{ ...this.doughnutChartData.datasets[0], data: [pending, confirmed, shipped, delivered, cancelled] }]
-      };
-      this.stats[1] = { ...this.stats[1], value: orders.length.toString() };
-      this.stats[2] = { ...this.stats[2], value: pending.toString() };
-      this.cdr.markForCheck();
+      if (orders.length > 0) {
+        this.recentOrders = orders.slice(0, 5);
+        const pending = orders.filter(o => o.status === 'PENDING').length;
+        const confirmed = orders.filter(o => o.status === 'CONFIRMED').length;
+        const shipped = orders.filter(o => o.status === 'SHIPPED').length;
+        const delivered = orders.filter(o => o.status === 'DELIVERED').length;
+        const cancelled = orders.filter(o => o.status === 'CANCELLED').length;
+        this.doughnutChartData = {
+          ...this.doughnutChartData,
+          datasets: [{ ...this.doughnutChartData.datasets[0], data: [pending, confirmed, shipped, delivered, cancelled] }]
+        };
+        this.stats[1] = { ...this.stats[1], value: orders.length.toString() };
+        this.stats[2] = { ...this.stats[2], value: pending.toString() };
+        this.cdr.markForCheck();
+      }
     });
 
     this.store.select(selectAllProducts).subscribe(products => {
-      const cats = products.reduce((acc: Record<string, number>, p: any) => {
-        acc[p.category] = (acc[p.category] || 0) + 1;
-        return acc;
-      }, {});
-      const labels = Object.keys(cats);
-      const data = Object.values(cats) as number[];
-      this.barChartData = {
-        labels,
-        datasets: [{ ...this.barChartData.datasets[0], data, backgroundColor: ['#8b5cf6', '#3b82f6', '#22c55e', '#f59e0b', '#ef4444'].slice(0, labels.length) }]
-      };
-      this.stats[0] = { ...this.stats[0], value: products.length.toString() };
-      this.cdr.markForCheck();
+      if (products.length > 0) {
+        const cats = products.reduce((acc: Record<string, number>, p: any) => {
+          acc[p.category] = (acc[p.category] || 0) + 1;
+          return acc;
+        }, {});
+        const labels = Object.keys(cats);
+        const data = Object.values(cats) as number[];
+        this.barChartData = {
+          labels,
+          datasets: [{ ...this.barChartData.datasets[0], data, backgroundColor: ['#3b82f6', '#8b5cf6', '#06b6d4', '#f59e0b', '#ef4444'].slice(0, labels.length) }]
+        };
+        this.stats[0] = { ...this.stats[0], value: products.length.toString() };
+        this.cdr.markForCheck();
+      }
     });
   }
 
