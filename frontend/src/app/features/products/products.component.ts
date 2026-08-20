@@ -45,7 +45,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </div>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        @if (theme.darkMode()) {
+        @if (isDark) {
           <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
             <ag-grid-angular class="w-full h-full"
               [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
@@ -115,6 +115,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private readonly search$ = new Subject<string>();
   private gridApi!: GridApi;
+  isDark = true;
 
   products = signal<Product[]>([]);
   loading = signal(false);
@@ -137,7 +138,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
   defaultColDef: ColDef = { sortable: true, resizable: true, filter: true, floatingFilter: true };
 
   ngOnInit(): void {
-    this.theme.themeChanged$.pipe(takeUntil(this.destroy$)).subscribe(() => this.cdr.markForCheck());
+    this.theme.darkMode$.pipe(takeUntil(this.destroy$)).subscribe(d => {
+      console.log('[Products] darkMode$ emitted:', d);
+      this.isDark = d;
+      this.cdr.markForCheck();
+    });
 
     this.store.dispatch(ProductActions.loadProducts({ page: 0, size: 20 }));
 

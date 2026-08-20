@@ -7,7 +7,7 @@ import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { Subject, takeUntil } from 'rxjs';
 import { Order } from '../../core/models/api.models';
 import { OrderActions } from '../../store/orders/orders.actions';
-import { selectAllOrders, selectOrderLoading, selectOrderPageInfo } from '../../store/orders/orders.selectors';
+import { selectAllOrders, selectOrderLoading } from '../../store/orders/orders.selectors';
 import { WebSocketService } from '../../core/services/websocket.service';
 import { ApiService } from '../../core/services/api.service';
 import { ThemeService } from '../../core/services/theme.service';
@@ -38,7 +38,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </select>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        @if (theme.darkMode()) {
+        @if (isDark) {
           <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
             <ag-grid-angular class="w-full h-full"
               [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
@@ -67,6 +67,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   readonly theme = inject(ThemeService);
   private readonly destroy$ = new Subject<void>();
   private gridApi!: GridApi;
+  isDark = true;
 
   orders = signal<Order[]>([]);
   loading = signal(false);
@@ -87,7 +88,11 @@ export class OrdersComponent implements OnInit, OnDestroy {
   defaultColDef: ColDef = { sortable: true, resizable: true, filter: true };
 
   ngOnInit(): void {
-    this.theme.themeChanged$.pipe(takeUntil(this.destroy$)).subscribe(() => this.cdr.markForCheck());
+    this.theme.darkMode$.pipe(takeUntil(this.destroy$)).subscribe(d => {
+      console.log('[Orders] darkMode$ emitted:', d);
+      this.isDark = d;
+      this.cdr.markForCheck();
+    });
 
     this.store.dispatch(OrderActions.loadOrders({ page: 0, size: 20 }));
     this.store.select(selectAllOrders).pipe(takeUntil(this.destroy$)).subscribe(o => { this.orders.set(o); this.cdr.markForCheck(); });

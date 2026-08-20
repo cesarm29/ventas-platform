@@ -1,30 +1,37 @@
 import { Injectable, signal, effect, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly platformId = inject(PLATFORM_ID);
   readonly darkMode = signal(true);
-  readonly themeChanged$ = new Subject<boolean>();
+  readonly darkMode$ = new BehaviorSubject<boolean>(true);
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
       const saved = localStorage.getItem('theme');
-      this.darkMode.set(saved ? saved === 'dark' : true);
+      console.log('[Theme] localStorage:', saved);
+      const isDark = saved ? saved === 'dark' : true;
+      this.darkMode.set(isDark);
+      this.darkMode$.next(isDark);
       this.applyTheme();
 
       effect(() => {
-        const isDark = this.darkMode();
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        const dark = this.darkMode();
+        console.log('[Theme] effect fired, dark:', dark, 'classes:', document.documentElement.className);
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+        this.darkMode$.next(dark);
         this.applyTheme();
-        this.themeChanged$.next(isDark);
+        console.log('[Theme] after apply, classes:', document.documentElement.className);
       });
     }
   }
 
   toggle() {
+    console.log('[Theme] toggle called, current:', this.darkMode());
     this.darkMode.update(v => !v);
+    console.log('[Theme] after toggle:', this.darkMode());
   }
 
   private applyTheme() {
