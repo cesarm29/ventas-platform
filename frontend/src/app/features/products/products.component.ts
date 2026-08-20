@@ -186,6 +186,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
   onGridReady(params: GridReadyEvent) { this.gridApi = params.api; }
 
   saveProduct() {
+    this.formTouched = true;
+    if (!this.formData.name || !this.formData.category || !this.formData.price || this.formData.price <= 0) {
+      return;
+    }
     this.store.dispatch(ProductActions.createProduct({ product: this.formData }));
     this.closeForm();
   }
