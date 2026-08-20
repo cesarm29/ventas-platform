@@ -153,7 +153,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
     const inactivoClass = 'text-red-400';
     return [
       { field: 'name', headerName: 'Producto', flex: 1, minWidth: 120, filter: 'agTextColumnFilter' },
-      { field: 'category', headerName: 'Categoria', width: 110, filter: 'agTextColumnFilter', hide: false },
       { field: 'price', headerName: 'Precio', width: 100, filter: 'agNumberColumnFilter', cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
       { field: 'stock', headerName: 'Stock', width: 80, filter: 'agNumberColumnFilter', cellStyle: (p: any) => ({ color: p.value < 20 ? stockLow : stockOk }) },
       { field: 'active', headerName: 'Estado', width: 90, cellRenderer: (p: any) => p.value ? `<span class="${activoClass}">Activo</span>` : `<span class="${inactivoClass}">Inactivo</span>` },
