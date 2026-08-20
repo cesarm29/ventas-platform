@@ -1,10 +1,12 @@
 import { Injectable, signal, effect, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly platformId = inject(PLATFORM_ID);
   readonly darkMode = signal(true);
+  readonly themeChanged$ = new Subject<boolean>();
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
@@ -16,6 +18,7 @@ export class ThemeService {
         const isDark = this.darkMode();
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
         this.applyTheme();
+        this.themeChanged$.next(isDark);
       });
     }
   }

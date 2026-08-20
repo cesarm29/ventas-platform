@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectionStrategy, ChangeDetectorRef, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -68,10 +68,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private gridApi!: GridApi;
 
-  constructor() {
-    effect(() => { this.theme.darkMode(); this.cdr.markForCheck(); });
-  }
-
   orders = signal<Order[]>([]);
   loading = signal(false);
   selectedStatus = '';
@@ -91,6 +87,8 @@ export class OrdersComponent implements OnInit, OnDestroy {
   defaultColDef: ColDef = { sortable: true, resizable: true, filter: true };
 
   ngOnInit(): void {
+    this.theme.themeChanged$.pipe(takeUntil(this.destroy$)).subscribe(() => this.cdr.markForCheck());
+
     this.store.dispatch(OrderActions.loadOrders({ page: 0, size: 20 }));
     this.store.select(selectAllOrders).pipe(takeUntil(this.destroy$)).subscribe(o => { this.orders.set(o); this.cdr.markForCheck(); });
     this.store.select(selectOrderLoading).pipe(takeUntil(this.destroy$)).subscribe(l => { this.loading.set(l); this.cdr.markForCheck(); });

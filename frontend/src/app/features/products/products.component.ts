@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed, ChangeDetectionStrategy, ChangeDetectorRef, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -124,9 +124,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   selectedCategory = '';
   formData: Product = { id: null, name: '', description: '', category: '', price: 0, stock: 0, active: true };
 
-  constructor() {
-    effect(() => { this.theme.darkMode(); this.cdr.markForCheck(); });
-  }
+  constructor() {}
 
   columnDefs: ColDef[] = [
     { field: 'name', headerName: 'Producto', flex: 1, minWidth: 200, filter: 'agTextColumnFilter' },
@@ -139,6 +137,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
   defaultColDef: ColDef = { sortable: true, resizable: true, filter: true, floatingFilter: true };
 
   ngOnInit(): void {
+    this.theme.themeChanged$.pipe(takeUntil(this.destroy$)).subscribe(() => this.cdr.markForCheck());
+
     this.store.dispatch(ProductActions.loadProducts({ page: 0, size: 20 }));
 
     this.search$.pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
