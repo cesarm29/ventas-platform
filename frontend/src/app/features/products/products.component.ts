@@ -43,6 +43,7 @@ import { ThemeService } from '../../core/services/theme.service';
         </div>
       </div>
       <div class="card p-0 overflow-x-hidden">
+        @if (gridVisible) {
         <div class="ag-theme-alpine" [class.ag-theme-alpine-dark]="isDark"
           [ngStyle]="isDark ? darkGridVars : null"
           style="height: 500px; width: 100%;">
@@ -52,6 +53,7 @@ import { ThemeService } from '../../core/services/theme.service';
             [animateRows]="true" [loading]="loading()"
             (gridReady)="onGridReady($event)" />
         </div>
+        }
       </div>
       @if (pageInfo(); as pi) {
         <div class="flex items-center justify-between text-sm text-dark-400">
@@ -106,6 +108,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private readonly search$ = new Subject<string>();
   private   gridApi!: GridApi;
   isDark = true;
+  gridVisible = false;
 
   readonly darkGridVars: Record<string, string> = {
     '--ag-background-color': '#0f172a',
@@ -148,6 +151,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
   defaultColDef: ColDef = { sortable: true, resizable: true, filter: true, floatingFilter: true };
 
   ngOnInit(): void {
+    setTimeout(() => this.gridVisible = true);
+
     this.theme.darkMode$.pipe(takeUntil(this.destroy$)).subscribe(d => {
       this.isDark = d;
       this.cdr.markForCheck();
