@@ -10,8 +10,6 @@ import { ProductActions } from '../../store/products/products.actions';
 import { selectAllProducts, selectProductLoading, selectProductPageInfo } from '../../store/products/products.selectors';
 import { WebSocketService } from '../../core/services/websocket.service';
 import { ThemeService } from '../../core/services/theme.service';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 @Component({
   selector: 'app-products',
@@ -45,23 +43,13 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </div>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        @if (isDark) {
-          <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
-            <ag-grid-angular class="w-full h-full"
-              [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-              [pagination]="true" [paginationPageSize]="20" [paginationPageSizeSelector]="[10,20,50]"
-              [animateRows]="true" [loading]="loading()"
-              (gridReady)="onGridReady($event)" />
-          </div>
-        } @else {
-          <div class="ag-theme-alpine" style="height: 500px; width: 100%;">
-            <ag-grid-angular class="w-full h-full"
-              [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-              [pagination]="true" [paginationPageSize]="20" [paginationPageSizeSelector]="[10,20,50]"
-              [animateRows]="true" [loading]="loading()"
-              (gridReady)="onGridReady($event)" />
-          </div>
-        }
+        <div class="ag-theme-alpine" [class.ag-theme-alpine-dark]="isDark" style="height: 500px; width: 100%;">
+          <ag-grid-angular class="w-full h-full"
+            [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+            [pagination]="true" [paginationPageSize]="20" [paginationPageSizeSelector]="[10,20,50]"
+            [animateRows]="true" [loading]="loading()"
+            (gridReady)="onGridReady($event)" />
+        </div>
       </div>
       @if (pageInfo(); as pi) {
         <div class="flex items-center justify-between text-sm text-dark-400">

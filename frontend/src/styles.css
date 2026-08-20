@@ -24,3 +24,21 @@ select.input-field {
 .sidebar-link.active {
   @apply bg-primary-600/10 text-primary-400 border-r-2 border-primary-500;
 }
+
+.ag-theme-alpine-dark {
+  --ag-background-color: #181d1f !important;
+  --ag-foreground-color: #fff !important;
+  --ag-border-color: #68686e !important;
+  --ag-header-background-color: #222628 !important;
+  --ag-header-foreground-color: #fff !important;
+  --ag-odd-row-background-color: #222628 !important;
+  --ag-row-hover-color: rgba(33, 150, 243, 0.1) !important;
+  --ag-control-panel-background-color: #222628 !important;
+  --ag-subheader-background-color: #000 !important;
+  --ag-input-border-color: #68686e !important;
+  --ag-icon-color: #fff !important;
+  --ag-secondary-border-color: rgba(88, 86, 82, 0.5) !important;
+  --ag-input-disabled-background-color: #282c2f !important;
+  --ag-card-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.5) !important;
+  --ag-popup-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.5) !important;
+}

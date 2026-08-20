@@ -11,8 +11,6 @@ import { selectAllOrders, selectOrderLoading } from '../../store/orders/orders.s
 import { WebSocketService } from '../../core/services/websocket.service';
 import { ApiService } from '../../core/services/api.service';
 import { ThemeService } from '../../core/services/theme.service';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 @Component({
   selector: 'app-orders',
@@ -38,23 +36,13 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
         </select>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        @if (isDark) {
-          <div class="ag-theme-alpine-dark" style="height: 500px; width: 100%;">
-            <ag-grid-angular class="w-full h-full"
-              [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-              [pagination]="true" [paginationPageSize]="20"
-              [animateRows]="true" [loading]="loading()"
-              (gridReady)="onGridReady($event)" />
-          </div>
-        } @else {
-          <div class="ag-theme-alpine" style="height: 500px; width: 100%;">
-            <ag-grid-angular class="w-full h-full"
-              [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-              [pagination]="true" [paginationPageSize]="20"
-              [animateRows]="true" [loading]="loading()"
-              (gridReady)="onGridReady($event)" />
-          </div>
-        }
+        <div class="ag-theme-alpine" [class.ag-theme-alpine-dark]="isDark" style="height: 500px; width: 100%;">
+          <ag-grid-angular class="w-full h-full"
+            [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+            [pagination]="true" [paginationPageSize]="20"
+            [animateRows]="true" [loading]="loading()"
+            (gridReady)="onGridReady($event)" />
+        </div>
       </div>
     </div>
   `
