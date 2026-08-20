@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed, ChangeDetectionStrategy, ChangeDetectorRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -123,6 +123,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
   searchTerm = '';
   selectedCategory = '';
   formData: Product = { id: null, name: '', description: '', category: '', price: 0, stock: 0, active: true };
+
+  constructor() {
+    effect(() => { this.theme.darkMode(); this.cdr.markForCheck(); });
+  }
 
   columnDefs: ColDef[] = [
     { field: 'name', headerName: 'Producto', flex: 1, minWidth: 200, filter: 'agTextColumnFilter' },
