@@ -28,6 +28,14 @@ import { ThemeService } from '../../core/services/theme.service';
           Nuevo producto
         </button>
       </div>
+      <div class="card !p-4 sm:!p-5">
+        <select [(ngModel)]="selectedCategory" (ngModelChange)="onCategory($event)" class="input-field shrink-0 w-full sm:w-48">
+          <option value="">Todas las categorias</option>
+          <option value="Electronica">Electronica</option>
+          <option value="Accesorios">Accesorios</option>
+          <option value="Muebles">Muebles</option>
+        </select>
+      </div>
       <div class="card p-0 overflow-x-hidden">
         @if (gridVisible) {
         <div class="ag-theme-alpine" [class.ag-theme-alpine-dark]="isDark"
@@ -140,6 +148,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   loading = signal(false);
   pageInfo = signal<any>(null);
   showForm = signal(false);
+  selectedCategory = '';
   formData: Product = { id: null, name: '', description: '', category: '', price: 0, stock: 0, active: true };
   formTouched = false;
 
@@ -153,6 +162,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     const inactivoClass = 'text-red-400';
     return [
       { field: 'name', headerName: 'Producto', flex: 1, minWidth: 120, filter: 'agTextColumnFilter' },
+      { field: 'category', headerName: 'Categoria', width: 120, filter: 'agTextColumnFilter' },
       { field: 'price', headerName: 'Precio', width: 100, filter: 'agNumberColumnFilter', cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
       { field: 'stock', headerName: 'Stock', width: 80, filter: 'agNumberColumnFilter', cellStyle: (p: any) => ({ color: p.value < 20 ? stockLow : stockOk }) },
       { field: 'active', headerName: 'Estado', width: 90, cellRenderer: (p: any) => p.value ? `<span class="${activoClass}">Activo</span>` : `<span class="${inactivoClass}">Inactivo</span>` },
@@ -183,6 +193,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   ngOnDestroy() { this.destroy$.next(); this.destroy$.complete(); }
 
   onGridReady(params: GridReadyEvent) { this.gridApi = params.api; }
+  onCategory(c: string) { this.store.dispatch(ProductActions.loadProducts({ page: 0, size: 20, category: c })); }
 
   saveProduct() {
     this.formTouched = true;
