@@ -62,7 +62,7 @@ import { ThemeService } from '../../core/services/theme.service';
         </div>
       }
       @if (showForm()) {
-        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" (click)="closeForm()">
+        <div class="fixed inset-0 bg-slate-400/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" (click)="closeForm()">
           <div class="card w-full max-w-lg" (click)="$event.stopPropagation()">
             <h2 class="text-xl font-semibold text-dark-50 mb-6">Nuevo producto</h2>
             <form (ngSubmit)="saveProduct()">
@@ -140,11 +140,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
     const activoClass = this.isDark ? 'text-blue-300' : 'text-green-400';
     const inactivoClass = 'text-red-400';
     return [
-      { field: 'name', headerName: 'Producto', flex: 1, minWidth: 200, filter: 'agTextColumnFilter' },
-      { field: 'category', headerName: 'Categoria', width: 140, filter: 'agTextColumnFilter' },
-      { field: 'price', headerName: 'Precio', width: 130, filter: 'agNumberColumnFilter', cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
-      { field: 'stock', headerName: 'Stock', width: 100, filter: 'agNumberColumnFilter', cellStyle: (p: any) => ({ color: p.value < 20 ? stockLow : stockOk }) },
-      { field: 'active', headerName: 'Estado', width: 100, cellRenderer: (p: any) => p.value ? `<span class="${activoClass}">Activo</span>` : `<span class="${inactivoClass}">Inactivo</span>` },
+      { field: 'name', headerName: 'Producto', flex: 1, minWidth: 120, filter: 'agTextColumnFilter' },
+      { field: 'category', headerName: 'Categoria', width: 110, filter: 'agTextColumnFilter', hide: false },
+      { field: 'price', headerName: 'Precio', width: 100, filter: 'agNumberColumnFilter', cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
+      { field: 'stock', headerName: 'Stock', width: 80, filter: 'agNumberColumnFilter', cellStyle: (p: any) => ({ color: p.value < 20 ? stockLow : stockOk }) },
+      { field: 'active', headerName: 'Estado', width: 90, cellRenderer: (p: any) => p.value ? `<span class="${activoClass}">Activo</span>` : `<span class="${inactivoClass}">Inactivo</span>` },
     ];
   }
 

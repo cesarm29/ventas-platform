@@ -60,15 +60,25 @@ public class OrderService {
         BigDecimal total = BigDecimal.ZERO;
 
         for (OrderItemRequest itemReq : request.items()) {
-            ProductDTO product = productClient.getProduct(itemReq.productId());
+            String productName;
+            BigDecimal unitPrice;
+
+            if (itemReq.productName() != null && itemReq.unitPrice() != null) {
+                productName = itemReq.productName();
+                unitPrice = itemReq.unitPrice();
+            } else {
+                ProductDTO product = productClient.getProduct(itemReq.productId());
+                productName = product.name();
+                unitPrice = product.price();
+            }
 
             OrderItem item = new OrderItem();
             item.setOrder(order);
-            item.setProductId(product.id());
-            item.setProductName(product.name());
+            item.setProductId(itemReq.productId());
+            item.setProductName(productName);
             item.setQuantity(itemReq.quantity());
-            item.setUnitPrice(product.price());
-            item.setSubtotal(product.price().multiply(BigDecimal.valueOf(itemReq.quantity())));
+            item.setUnitPrice(unitPrice);
+            item.setSubtotal(unitPrice.multiply(BigDecimal.valueOf(itemReq.quantity())));
 
             order.getItems().add(item);
             total = total.add(item.getSubtotal());

@@ -83,12 +83,12 @@ export class OrdersComponent implements OnInit, OnDestroy {
     const delivered = this.isDark ? 'text-blue-300' : 'text-green-400';
     const colors: Record<string, string> = { PENDING: 'text-yellow-400', CONFIRMED: 'text-blue-400', SHIPPED: 'text-purple-400', DELIVERED: delivered, CANCELLED: 'text-red-400' };
     return [
-      { field: 'id', headerName: '#', width: 70 },
-      { field: 'clientName', headerName: 'Cliente', flex: 1, minWidth: 150 },
-      { field: 'clientEmail', headerName: 'Email', width: 200 },
-      { field: 'total', headerName: 'Total', width: 120, cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
-      { field: 'status', headerName: 'Estado', width: 130, cellRenderer: (p: any) => `<span class="${colors[p.value] || ''}">${p.value}</span>` },
-      { field: 'createdAt', headerName: 'Fecha', width: 180, valueFormatter: (p: any) => p.value ? new Date(p.value).toLocaleDateString() : '' },
+      { field: 'id', headerName: '#', width: 60 },
+      { field: 'clientName', headerName: 'Cliente', flex: 1, minWidth: 120 },
+      { field: 'clientEmail', headerName: 'Email', minWidth: 120, flex: 0.8 },
+      { field: 'total', headerName: 'Total', width: 100, cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
+      { field: 'status', headerName: 'Estado', width: 110, cellRenderer: (p: any) => `<span class="${colors[p.value] || ''}">${p.value}</span>` },
+      { field: 'createdAt', headerName: 'Fecha', width: 100, valueFormatter: (p: any) => p.value ? new Date(p.value).toLocaleDateString() : '' },
     ];
   }
 
