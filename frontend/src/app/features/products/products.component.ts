@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Product } from '../../core/models/api.models';
 import { ProductActions } from '../../store/products/products.actions';
 import { selectAllProducts, selectProductLoading, selectProductPageInfo } from '../../store/products/products.selectors';
@@ -28,20 +28,6 @@ import { ThemeService } from '../../core/services/theme.service';
           Nuevo producto
         </button>
       </div>
-      <div class="card !p-4 sm:!p-6 overflow-hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div class="relative flex-1 min-w-0 order-2 sm:order-1">
-            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" class="input-field w-full !pl-11" placeholder="Buscar producto..." />
-          </div>
-          <select [(ngModel)]="selectedCategory" (ngModelChange)="onCategory($event)" class="input-field shrink-0 order-1 sm:order-2 w-full sm:w-48">
-            <option value="">Categoria</option>
-            <option value="Electronica">Electronica</option>
-            <option value="Accesorios">Accesorios</option>
-            <option value="Muebles">Muebles</option>
-          </select>
-        </div>
-      </div>
       <div class="card p-0 overflow-x-hidden">
         @if (gridVisible) {
         <div class="ag-theme-alpine" [class.ag-theme-alpine-dark]="isDark"
@@ -62,30 +48,58 @@ import { ThemeService } from '../../core/services/theme.service';
         </div>
       }
       @if (showForm()) {
-        <div class="fixed inset-0 bg-slate-400/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" (click)="closeForm()">
-          <div class="card w-full max-w-lg" (click)="$event.stopPropagation()">
+        <div class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" (click)="closeForm()">
+          <div class="w-full max-w-lg bg-dark-800 border border-dark-700 rounded-2xl p-6 shadow-2xl" (click)="$event.stopPropagation()">
             <h2 class="text-xl font-semibold text-dark-50 mb-6">Nuevo producto</h2>
-            <form (ngSubmit)="saveProduct()">
+            <form (ngSubmit)="saveProduct()" #productForm="ngForm">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
                   <label class="block text-sm text-dark-300 mb-1">Nombre</label>
-                  <input [(ngModel)]="formData.name" name="name" class="input-field w-full" required />
+                  <input type="text" [(ngModel)]="formData.name" name="name" class="input-field w-full"
+                    [class.!border-red-500]="formTouched && !formData.name"
+                    placeholder="Nombre del producto" (blur)="formTouched = true" required />
+                  @if (formTouched && !formData.name) {
+                    <p class="mt-1 text-xs text-red-400">El nombre es requerido</p>
+                  }
                 </div>
                 <div>
                   <label class="block text-sm text-dark-300 mb-1">Categoria</label>
-                  <input [(ngModel)]="formData.category" name="category" class="input-field w-full" required />
+                  <select [(ngModel)]="formData.category" name="category" class="input-field w-full"
+                    [class.!border-red-500]="formTouched && !formData.category"
+                    (blur)="formTouched = true" required>
+                    <option value="" disabled>Seleccionar</option>
+                    <option value="Electronica">Electronica</option>
+                    <option value="Accesorios">Accesorios</option>
+                    <option value="Muebles">Muebles</option>
+                    <option value="Ropa">Ropa</option>
+                    <option value="Deportes">Deportes</option>
+                  </select>
+                  @if (formTouched && !formData.category) {
+                    <p class="mt-1 text-xs text-red-400">Selecciona una categoria</p>
+                  }
                 </div>
                 <div>
-                  <label class="block text-sm text-dark-300 mb-1">Precio</label>
-                  <input type="number" [(ngModel)]="formData.price" name="price" class="input-field w-full" required />
+                  <label class="block text-sm text-dark-300 mb-1">Precio ($)</label>
+                  <input type="number" [(ngModel)]="formData.price" name="price" class="input-field w-full"
+                    [class.!border-red-500]="formTouched && (!formData.price || formData.price <= 0)"
+                    placeholder="0.00" (blur)="formTouched = true" min="0.01" step="0.01" required />
+                  @if (formTouched && (!formData.price || formData.price <= 0)) {
+                    <p class="mt-1 text-xs text-red-400">Precio requerido mayor a 0</p>
+                  }
                 </div>
                 <div>
                   <label class="block text-sm text-dark-300 mb-1">Stock</label>
-                  <input type="number" [(ngModel)]="formData.stock" name="stock" class="input-field w-full" required />
+                  <input type="number" [(ngModel)]="formData.stock" name="stock" class="input-field w-full"
+                    [class.!border-red-500]="formTouched && (!formData.stock && formData.stock !== 0)"
+                    placeholder="0" (blur)="formTouched = true" min="0" required />
+                  @if (formTouched && (!formData.stock && formData.stock !== 0)) {
+                    <p class="mt-1 text-xs text-red-400">Stock requerido</p>
+                  }
                 </div>
                 <div class="sm:col-span-2">
                   <label class="block text-sm text-dark-300 mb-1">Descripcion</label>
-                  <textarea [(ngModel)]="formData.description" name="description" class="input-field w-full" rows="2"></textarea>
+                  <textarea [(ngModel)]="formData.description" name="description" class="input-field w-full"
+                    placeholder="Descripcion del producto..." rows="2"></textarea>
                 </div>
               </div>
               <div class="flex justify-end gap-3 mt-6">
@@ -105,7 +119,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private readonly ws = inject(WebSocketService);
   readonly theme = inject(ThemeService);
   private readonly destroy$ = new Subject<void>();
-  private readonly search$ = new Subject<string>();
   private   gridApi!: GridApi;
   isDark = true;
   gridVisible = false;
@@ -127,9 +140,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
   loading = signal(false);
   pageInfo = signal<any>(null);
   showForm = signal(false);
-  searchTerm = '';
-  selectedCategory = '';
   formData: Product = { id: null, name: '', description: '', category: '', price: 0, stock: 0, active: true };
+  formTouched = false;
 
   constructor() {}
 
@@ -160,9 +172,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(ProductActions.loadProducts({ page: 0, size: 20 }));
 
-    this.search$.pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe(s => this.store.dispatch(ProductActions.loadProducts({ page: 0, size: 20, search: s, category: this.selectedCategory })));
-
     this.store.select(selectAllProducts).pipe(takeUntil(this.destroy$)).subscribe(p => { this.products.set(p); this.cdr.markForCheck(); });
     this.store.select(selectProductLoading).pipe(takeUntil(this.destroy$)).subscribe(l => { this.loading.set(l); this.cdr.markForCheck(); });
     this.store.select(selectProductPageInfo).pipe(takeUntil(this.destroy$)).subscribe(i => { this.pageInfo.set(i); this.cdr.markForCheck(); });
@@ -175,8 +184,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
   ngOnDestroy() { this.destroy$.next(); this.destroy$.complete(); }
 
   onGridReady(params: GridReadyEvent) { this.gridApi = params.api; }
-  onSearch(v: string) { this.search$.next(v); }
-  onCategory(c: string) { this.store.dispatch(ProductActions.loadProducts({ page: 0, size: 20, search: this.searchTerm, category: c })); }
 
   saveProduct() {
     this.store.dispatch(ProductActions.createProduct({ product: this.formData }));
