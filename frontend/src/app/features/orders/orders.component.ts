@@ -36,7 +36,9 @@ import { ThemeService } from '../../core/services/theme.service';
         </select>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        <div class="ag-theme-alpine" [class.ag-theme-alpine-dark]="isDark" style="height: 500px; width: 100%;">
+        <div class="ag-theme-alpine" [class.ag-theme-alpine-dark]="isDark"
+          [ngStyle]="isDark ? darkGridVars : null"
+          style="height: 500px; width: 100%;">
           <ag-grid-angular class="w-full h-full"
             [rowData]="orders()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
             [pagination]="true" [paginationPageSize]="20"
@@ -57,27 +59,40 @@ export class OrdersComponent implements OnInit, OnDestroy {
   private gridApi!: GridApi;
   isDark = true;
 
+  readonly darkGridVars: Record<string, string> = {
+    '--ag-background-color': '#0f172a',
+    '--ag-foreground-color': '#f8fafc',
+    '--ag-border-color': '#1e3a5f',
+    '--ag-header-background-color': '#1e293b',
+    '--ag-header-foreground-color': '#e2e8f0',
+    '--ag-odd-row-background-color': '#1e293b',
+    '--ag-row-hover-color': 'rgba(59, 130, 246, 0.15)',
+    '--ag-control-panel-background-color': '#1e293b',
+    '--ag-alpine-active-color': '#3b82f6',
+    '--ag-selected-row-background-color': 'rgba(59, 130, 246, 0.2)',
+  };
+
   orders = signal<Order[]>([]);
   loading = signal(false);
   selectedStatus = '';
 
-  columnDefs: ColDef[] = [
-    { field: 'id', headerName: '#', width: 70 },
-    { field: 'clientName', headerName: 'Cliente', flex: 1, minWidth: 150 },
-    { field: 'clientEmail', headerName: 'Email', width: 200 },
-    { field: 'total', headerName: 'Total', width: 120, cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
-    { field: 'status', headerName: 'Estado', width: 130, cellRenderer: (p: any) => {
-      const colors: Record<string, string> = { PENDING: 'text-yellow-400', CONFIRMED: 'text-blue-400', SHIPPED: 'text-purple-400', DELIVERED: 'text-green-400', CANCELLED: 'text-red-400' };
-      return `<span class="${colors[p.value] || ''}">${p.value}</span>`;
-    }},
-    { field: 'createdAt', headerName: 'Fecha', width: 180, valueFormatter: (p: any) => p.value ? new Date(p.value).toLocaleDateString() : '' },
-  ];
+  get columnDefs(): ColDef[] {
+    const delivered = this.isDark ? 'text-blue-300' : 'text-green-400';
+    const colors: Record<string, string> = { PENDING: 'text-yellow-400', CONFIRMED: 'text-blue-400', SHIPPED: 'text-purple-400', DELIVERED: delivered, CANCELLED: 'text-red-400' };
+    return [
+      { field: 'id', headerName: '#', width: 70 },
+      { field: 'clientName', headerName: 'Cliente', flex: 1, minWidth: 150 },
+      { field: 'clientEmail', headerName: 'Email', width: 200 },
+      { field: 'total', headerName: 'Total', width: 120, cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
+      { field: 'status', headerName: 'Estado', width: 130, cellRenderer: (p: any) => `<span class="${colors[p.value] || ''}">${p.value}</span>` },
+      { field: 'createdAt', headerName: 'Fecha', width: 180, valueFormatter: (p: any) => p.value ? new Date(p.value).toLocaleDateString() : '' },
+    ];
+  }
 
   defaultColDef: ColDef = { sortable: true, resizable: true, filter: true };
 
   ngOnInit(): void {
     this.theme.darkMode$.pipe(takeUntil(this.destroy$)).subscribe(d => {
-      console.log('[Orders] darkMode$ emitted:', d);
       this.isDark = d;
       this.cdr.markForCheck();
     });

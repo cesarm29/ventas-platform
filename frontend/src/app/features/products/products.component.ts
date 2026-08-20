@@ -43,7 +43,9 @@ import { ThemeService } from '../../core/services/theme.service';
         </div>
       </div>
       <div class="card p-0 overflow-x-hidden">
-        <div class="ag-theme-alpine" [class.ag-theme-alpine-dark]="isDark" style="height: 500px; width: 100%;">
+        <div class="ag-theme-alpine" [class.ag-theme-alpine-dark]="isDark"
+          [ngStyle]="isDark ? darkGridVars : null"
+          style="height: 500px; width: 100%;">
           <ag-grid-angular class="w-full h-full"
             [rowData]="products()" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
             [pagination]="true" [paginationPageSize]="20" [paginationPageSizeSelector]="[10,20,50]"
@@ -102,8 +104,21 @@ export class ProductsComponent implements OnInit, OnDestroy {
   readonly theme = inject(ThemeService);
   private readonly destroy$ = new Subject<void>();
   private readonly search$ = new Subject<string>();
-  private gridApi!: GridApi;
+  private   gridApi!: GridApi;
   isDark = true;
+
+  readonly darkGridVars: Record<string, string> = {
+    '--ag-background-color': '#0f172a',
+    '--ag-foreground-color': '#f8fafc',
+    '--ag-border-color': '#1e3a5f',
+    '--ag-header-background-color': '#1e293b',
+    '--ag-header-foreground-color': '#e2e8f0',
+    '--ag-odd-row-background-color': '#1e293b',
+    '--ag-row-hover-color': 'rgba(59, 130, 246, 0.15)',
+    '--ag-control-panel-background-color': '#1e293b',
+    '--ag-alpine-active-color': '#3b82f6',
+    '--ag-selected-row-background-color': 'rgba(59, 130, 246, 0.2)',
+  };
 
   products = signal<Product[]>([]);
   loading = signal(false);
@@ -115,19 +130,25 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   constructor() {}
 
-  columnDefs: ColDef[] = [
-    { field: 'name', headerName: 'Producto', flex: 1, minWidth: 200, filter: 'agTextColumnFilter' },
-    { field: 'category', headerName: 'Categoria', width: 140, filter: 'agTextColumnFilter' },
-    { field: 'price', headerName: 'Precio', width: 130, filter: 'agNumberColumnFilter', cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
-    { field: 'stock', headerName: 'Stock', width: 100, filter: 'agNumberColumnFilter', cellStyle: (p: any) => ({ color: p.value < 20 ? '#f87171' : '#4ade80' }) },
-    { field: 'active', headerName: 'Estado', width: 100, cellRenderer: (p: any) => p.value ? '<span class="text-green-400">Activo</span>' : '<span class="text-red-400">Inactivo</span>' },
-  ];
+  get columnDefs(): ColDef[] {
+    const stockOk = this.isDark ? '#93c5fd' : '#4ade80';
+    const stockLow = '#f87171';
+    const activo = this.isDark ? '#93c5fd' : '#4ade80';
+    const activoClass = this.isDark ? 'text-blue-300' : 'text-green-400';
+    const inactivoClass = 'text-red-400';
+    return [
+      { field: 'name', headerName: 'Producto', flex: 1, minWidth: 200, filter: 'agTextColumnFilter' },
+      { field: 'category', headerName: 'Categoria', width: 140, filter: 'agTextColumnFilter' },
+      { field: 'price', headerName: 'Precio', width: 130, filter: 'agNumberColumnFilter', cellRenderer: (p: any) => `$${p.value?.toLocaleString()}` },
+      { field: 'stock', headerName: 'Stock', width: 100, filter: 'agNumberColumnFilter', cellStyle: (p: any) => ({ color: p.value < 20 ? stockLow : stockOk }) },
+      { field: 'active', headerName: 'Estado', width: 100, cellRenderer: (p: any) => p.value ? `<span class="${activoClass}">Activo</span>` : `<span class="${inactivoClass}">Inactivo</span>` },
+    ];
+  }
 
   defaultColDef: ColDef = { sortable: true, resizable: true, filter: true, floatingFilter: true };
 
   ngOnInit(): void {
     this.theme.darkMode$.pipe(takeUntil(this.destroy$)).subscribe(d => {
-      console.log('[Products] darkMode$ emitted:', d);
       this.isDark = d;
       this.cdr.markForCheck();
     });

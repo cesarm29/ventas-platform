@@ -11,7 +11,6 @@ export class ThemeService {
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
       const saved = localStorage.getItem('theme');
-      console.log('[Theme] localStorage:', saved);
       const isDark = saved ? saved === 'dark' : true;
       this.darkMode.set(isDark);
       this.darkMode$.next(isDark);
@@ -19,19 +18,15 @@ export class ThemeService {
 
       effect(() => {
         const dark = this.darkMode();
-        console.log('[Theme] effect fired, dark:', dark, 'classes:', document.documentElement.className);
         localStorage.setItem('theme', dark ? 'dark' : 'light');
         this.darkMode$.next(dark);
         this.applyTheme();
-        console.log('[Theme] after apply, classes:', document.documentElement.className);
       });
     }
   }
 
   toggle() {
-    console.log('[Theme] toggle called, current:', this.darkMode());
     this.darkMode.update(v => !v);
-    console.log('[Theme] after toggle:', this.darkMode());
   }
 
   private applyTheme() {
