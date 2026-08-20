@@ -13,12 +13,13 @@ import { AuthEffects } from './store/auth/auth.effects';
 import { ProductsEffects } from './store/products/products.effects';
 import { OrdersEffects } from './store/orders/orders.effects';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
-import { AllCommunityModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, ValidationModule, provideGlobalGridOptions } from 'ag-grid-community';
 import { AuthService } from './core/services/auth.service';
 import { AuthActions } from './store/auth/auth.actions';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 ModuleRegistry.registerModules([AllCommunityModule, ValidationModule]);
+provideGlobalGridOptions({ theme: 'legacy' });
 
 export const appConfig: ApplicationConfig = {
   providers: [
