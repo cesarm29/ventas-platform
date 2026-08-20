@@ -25,7 +25,8 @@ select.input-field {
   @apply bg-primary-600/10 text-primary-400 border-r-2 border-primary-500;
 }
 
-.ag-theme-alpine-dark {
+.ag-theme-alpine-dark,
+.ag-theme-alpine-dark * {
   --ag-background-color: #0f172a !important;
   --ag-foreground-color: #f8fafc !important;
   --ag-border-color: #1e3a5f !important;
